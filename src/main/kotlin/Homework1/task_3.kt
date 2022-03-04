@@ -1,5 +1,3 @@
-package Homework1
-
 import java.util.Collections
 
 class PerformedCommandStorage {
@@ -22,14 +20,14 @@ class PerformedCommandStorage {
             Collections.swap(numbers, firstIndex, secondIndex)
             swaps.add(Pair(firstIndex, secondIndex))
             actions.add("SWAP")
-        } catch (e: IndexOutOfBoundsException) {
-            println("ОШИБКА! Команда SWAP некорректна: одного из указанных при вызове индексов не существует. ${e.message}")
+        } catch (e: ArrayIndexOutOfBoundsException) {
+            println("Команда SWAP некорректна: одного из указанных при вызове индексов не существует. ${e.message}")
         }
     }
 
     fun cancelLastAction() {
         if (actions.isEmpty()) {
-            println("ОШИБКА! Список команд пуст, отменять нечего")
+            println("Список команд пуст, отменять нечего")
             return
         }
 
