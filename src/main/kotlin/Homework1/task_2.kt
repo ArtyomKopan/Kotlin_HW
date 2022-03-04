@@ -19,12 +19,10 @@ fun getPrimeNumbers(n: Int): List<Int> {
     return isPrime.mapIndexed { index, value -> if (value) index else null }.filterNotNull()
 }
 
-val scan = java.util.Scanner(System.`in`)
-
 fun main() {
     print("Введите верхнюю границу: ")
     try {
-        val n = scan.nextInt()
+        val n = readLine()!!.toInt()
         val primes = getPrimeNumbers(n)
         print(primes.joinToString(separator = " "))
     } catch (e: InputMismatchException) {
