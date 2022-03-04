@@ -1,3 +1,5 @@
+package Homework1
+
 import java.util.Collections
 
 class PerformedCommandStorage {
@@ -21,7 +23,7 @@ class PerformedCommandStorage {
             swaps.add(Pair(firstIndex, secondIndex))
             actions.add("SWAP")
         } catch (e: IndexOutOfBoundsException) {
-            println("ОШИБКА! Команда SWAP некорректна: одного из указанных при вызове индексов не существует")
+            println("ОШИБКА! Команда SWAP некорректна: одного из указанных при вызове индексов не существует. ${e.message}")
         }
     }
 
