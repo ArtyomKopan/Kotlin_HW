@@ -25,7 +25,8 @@ fun main() {
         val n = readLine()!!.toInt()
         val primes = getPrimeNumbers(n)
         print(primes.joinToString(separator = " "))
-    } catch (e: InputMismatchException) {
+    } catch (e: NumberFormatException) {
         println("Введённое значение некорректно. Попробуйте ещё раз")
+        println(e)
     }
 }
