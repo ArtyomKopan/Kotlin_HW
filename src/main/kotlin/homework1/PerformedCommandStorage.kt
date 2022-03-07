@@ -1,5 +1,3 @@
-//package homework1
-
 import java.util.Collections
 
 class PerformedCommandStorage {
