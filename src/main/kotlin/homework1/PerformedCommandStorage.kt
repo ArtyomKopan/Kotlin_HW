@@ -97,6 +97,7 @@ fun commandInput(): MutableList<Triple<String, Int?, Int?>> {
     return commandBuffer
 }
 
+
 fun main() {
     val commandBuffer = commandInput()
     val resultNumberList = commandProcessing(commandBuffer)
