@@ -1,15 +1,13 @@
 import kotlin.math.ceil
 import kotlin.math.sqrt
 
-fun getPrimeNumbers(n: Int): List<Int> {
-    require(n > 0) { "Граница должна быть положительным числом!" }
-
+fun getPrimeNumbers(n: Int): List<Int> { // always n > 0
     val isPrime = BooleanArray(n + 1) { true }
     isPrime[0] = false
     isPrime[1] = false
-    for (p in 2..ceil(sqrt(n.toDouble())).toInt()) {
-        if (isPrime[p]) {
-            for (x in (p * p)..n step p) {
+    for (possiblyPrime in 2..ceil(sqrt(n.toDouble())).toInt()) {
+        if (isPrime[possiblyPrime]) {
+            for (x in (possiblyPrime * possiblyPrime)..n step possiblyPrime) {
                 isPrime[x] = false
             }
         }
@@ -20,12 +18,13 @@ fun getPrimeNumbers(n: Int): List<Int> {
 
 fun main() {
     print("Введите верхнюю границу: ")
-    try {
-        val n = readLine()!!.toInt()
+    val n = readLine()?.toIntOrNull()
+    if (n == null)
+        println("Введённое значение некорректно. Попробуйте ещё раз")
+    else if (n < 0) {
+        println("Верхняя граница должна быть положительным числом")
+    } else {
         val primes = getPrimeNumbers(n)
         print(primes.joinToString(separator = " "))
-    } catch (e: NumberFormatException) {
-        println("Введённое значение некорректно. Попробуйте ещё раз")
-        println(e)
     }
 }
