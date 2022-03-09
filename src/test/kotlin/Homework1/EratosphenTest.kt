@@ -1,7 +1,9 @@
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
+import kotlin.test.assertFailsWith
 
 internal class EratosphenTest {
 
@@ -9,6 +11,12 @@ internal class EratosphenTest {
     @MethodSource("addTestInputData")
     fun `test primes`(expected: List<Int>, firstArg: Int) {
         assertEquals(expected, getPrimeNumbers(firstArg))
+    }
+
+    @Test
+    fun givenInvalidNumericFormatThenThrowsException() {
+        val exception = assertFailsWith<NumberFormatException> { Integer.parseInt("abcdef") }
+        assertEquals(exception.message, "For input string: \"abcdef\"")
     }
 
     companion object {
