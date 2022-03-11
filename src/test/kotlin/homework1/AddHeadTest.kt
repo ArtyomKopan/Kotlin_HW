@@ -1,7 +1,5 @@
 package homework1
 
-import AddHead
-import PerformedCommandStorage
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 
