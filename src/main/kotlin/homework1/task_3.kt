@@ -1,4 +1,4 @@
-package homework1
+package homework.one
 
 fun commandProcessing(): MutableList<Int> {
     val storage = PerformedCommandStorage()

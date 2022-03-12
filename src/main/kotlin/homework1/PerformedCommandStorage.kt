@@ -1,4 +1,4 @@
-package homework1
+package homework.one
 
 enum class Command {
     ADD_HEAD, ADD_TAIL, MOVE
