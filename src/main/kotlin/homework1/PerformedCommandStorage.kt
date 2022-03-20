@@ -1,7 +1,5 @@
 package homework.one
 
-import java.util.EmptyStackException
-
 class PerformedCommandStorage {
     val actions = mutableListOf<Action>()
     val numbers = mutableListOf<Int>()

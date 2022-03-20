@@ -18,7 +18,7 @@ fun commandProcess(): MutableList<Int> {
                 val to = scan.nextInt()
                 try {
                     storage.addAction(Move(from, to))
-                } catch (e: ArrayIndexOutOfBoundsException) {
+                } catch (e: IndexOutOfBoundsException) {
                     println(e.message)
                 }
             }

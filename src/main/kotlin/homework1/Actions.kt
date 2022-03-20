@@ -32,9 +32,13 @@ class AddTail(private val element: Int) : Action {
 
 class Move(private val from: Int, private val to: Int) : Action {
 
+    private fun isCorrectIndex(index: Int, storage: PerformedCommandStorage): Boolean {
+        return index >= 0 && index < storage.numbers.size
+    }
+
     override fun doAction(storage: PerformedCommandStorage) {
-        if (from < 0 || to < 0 || from >= storage.numbers.size || to >= storage.numbers.size) {
-            throw ArrayIndexOutOfBoundsException("Команда MOVE некорректна: один из индексов выходит за границы списка")
+        if (!isCorrectIndex(from, storage) || !isCorrectIndex(to, storage)) {
+            throw IndexOutOfBoundsException("Команда MOVE некорректна: один из индексов выходит за границы списка")
         }
 
         val movableElement = storage.numbers[from]
