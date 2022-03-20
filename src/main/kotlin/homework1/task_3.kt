@@ -1,6 +1,8 @@
-package homeworkone
+package homework.one
 
-fun commandProcessing(): MutableList<Int> {
+import java.util.EmptyStackException
+
+fun commandProcess(): MutableList<Int> {
     val storage = PerformedCommandStorage()
 
     val scan = java.util.Scanner(System.`in`)
@@ -11,20 +13,24 @@ fun commandProcessing(): MutableList<Int> {
         command = scan.next()
 
         when (command.uppercase()) {
-            "ADD_HEAD" -> storage.addAction(AddHead(), listOf(scan.nextInt()))
-            "ADD_TAIL" -> storage.addAction(AddTail(), listOf(scan.nextInt()))
+            "ADD_HEAD" -> storage.addAction(AddHead(scan.nextInt()))
+            "ADD_TAIL" -> storage.addAction(AddTail(scan.nextInt()))
             "MOVE" -> {
-                val firstIndex = scan.nextInt()
-                val secondIndex = scan.nextInt()
-                if (firstIndex < 0 || secondIndex < 0) {
-                    println("Команда MOVE некорректна: один из индексов отрицателен!")
-                } else if (firstIndex >= storage.numbers.size || secondIndex >= storage.numbers.size) {
-                    println("Команда MOVE некорректна: один из индексов больше длины списка!")
-                } else {
-                    storage.addAction(Move(), listOf(firstIndex, secondIndex))
+                val from = scan.nextInt()
+                val to = scan.nextInt()
+                try {
+                    storage.addAction(Move(from, to))
+                } catch (e: ArrayIndexOutOfBoundsException) {
+                    println("Команда MOVE некорректна: один из индексов выходит за границы списка")
                 }
             }
-            "CANCEL" -> storage.cancelLastAction()
+            "CANCEL" -> {
+                try {
+                    storage.cancelLastAction()
+                } catch (e: EmptyStackException) {
+                    println("Список пуст, отменять нечего")
+                }
+            }
             "END" -> break
             else -> println("Введённой команды не существует")
         }
@@ -36,7 +42,7 @@ fun main() {
     println("Вводите команды по одной вместе с их аргументами. Если хотите завершить, введите END")
     println("Доступные команды: ADD_HEAD x, ADD_TAIL x, MOVE i j, CANCEL")
 
-    val resultList = commandProcessing()
+    val resultList = commandProcess()
 
     println(resultList.joinToString(separator = " "))
 }
