@@ -1,7 +1,5 @@
 package homework.one
 
-import java.util.EmptyStackException
-
 fun commandProcess(): MutableList<Int> {
     val storage = PerformedCommandStorage()
 
@@ -21,14 +19,14 @@ fun commandProcess(): MutableList<Int> {
                 try {
                     storage.addAction(Move(from, to))
                 } catch (e: ArrayIndexOutOfBoundsException) {
-                    println("Команда MOVE некорректна: один из индексов выходит за границы списка")
+                    println(e.message)
                 }
             }
             "CANCEL" -> {
                 try {
                     storage.cancelLastAction()
-                } catch (e: EmptyStackException) {
-                    println("Список пуст, отменять нечего")
+                } catch (e: IllegalArgumentException) {
+                    println(e.message)
                 }
             }
             "END" -> break

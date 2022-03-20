@@ -34,7 +34,7 @@ class Move(private val from: Int, private val to: Int) : Action {
 
     override fun doAction(storage: PerformedCommandStorage) {
         if (from < 0 || to < 0 || from >= storage.numbers.size || to >= storage.numbers.size) {
-            throw ArrayIndexOutOfBoundsException()
+            throw ArrayIndexOutOfBoundsException("Команда MOVE некорректна: один из индексов выходит за границы списка")
         }
 
         val movableElement = storage.numbers[from]

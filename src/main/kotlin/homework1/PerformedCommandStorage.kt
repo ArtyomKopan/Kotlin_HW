@@ -12,7 +12,7 @@ class PerformedCommandStorage {
 
     fun cancelLastAction() {
         if (actions.isEmpty()) {
-            throw EmptyStackException()
+            throw IllegalArgumentException("Список пуст, отменять нечего")
         }
 
         val lastAction = actions.removeLast()
