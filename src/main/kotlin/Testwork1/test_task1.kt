@@ -3,7 +3,7 @@ package testwork1
 import java.util.TreeSet
 
 class PriorityQueue<K : Comparable<K>, E>(Comparator: (Pair<K, E>, Pair<K, E>) -> Int) {
-    val queue = TreeSet<Pair<K, E>>(Comparator)
+    private val queue = TreeSet<Pair<K, E>>(Comparator)
 
     fun enqueue(element: E, priority: K) = queue.add(Pair(priority, element))
 
@@ -17,3 +17,5 @@ class PriorityQueue<K : Comparable<K>, E>(Comparator: (Pair<K, E>, Pair<K, E>) -
         return maxElement ?: throw IllegalArgumentException("Очередь пуста!")
     }
 }
+
+
