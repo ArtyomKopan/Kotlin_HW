@@ -16,10 +16,11 @@ fun commandExecute(): List<Int> {
     var command: Command
     while (true) {
         print(">>> ")
-        command = try {
-            Command.valueOf(scan.next().uppercase())
+        try {
+            command = Command.valueOf(scan.next().uppercase())
         } catch (e: IllegalArgumentException) {
-            Command.ERROR
+            command = Command.ERROR
+            println("Ошибка: введённой команды не существует (${e.message})")
         }
         when (command) {
             Command.ADD_HEAD -> storage.addAction(AddHead(scan.nextInt()))
@@ -41,7 +42,6 @@ fun commandExecute(): List<Int> {
                 }
             }
             Command.END -> break
-            Command.ERROR -> println("Ошибка: введённой команды не существует")
         }
     }
     return storage.publicNumbers
