@@ -1,6 +1,6 @@
 package homework.one
 
-enum class Command {
+private enum class Command {
     ADD_HEAD,
     ADD_TAIL,
     MOVE,
