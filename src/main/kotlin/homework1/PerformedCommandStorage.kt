@@ -4,7 +4,7 @@ class PerformedCommandStorage {
     private val actions = mutableListOf<Action>()
     private val numbers = mutableListOf<Int>()
     val publicNumbers: List<Int>
-    get() = numbers.toList()
+        get() = numbers.toList()
 
     fun addAction(action: Action) {
         actions.add(action)

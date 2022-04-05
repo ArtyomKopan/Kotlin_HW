@@ -5,7 +5,8 @@ enum class Command {
     ADD_TAIL,
     MOVE,
     CANCEL,
-    END
+    END,
+    ERROR
 }
 
 fun commandExecute(): List<Int> {
@@ -15,11 +16,10 @@ fun commandExecute(): List<Int> {
     var command: Command
     while (true) {
         print(">>> ")
-        try {
-            command = Command.valueOf(scan.next().uppercase())
+        command = try {
+            Command.valueOf(scan.next().uppercase())
         } catch (e: IllegalArgumentException) {
-            println("Введённой команды не существует")
-            continue
+            Command.ERROR
         }
         when (command) {
             Command.ADD_HEAD -> storage.addAction(AddHead(scan.nextInt()))
@@ -41,6 +41,7 @@ fun commandExecute(): List<Int> {
                 }
             }
             Command.END -> break
+            Command.ERROR -> println("Ошибка: введённой команды не существует")
         }
     }
     return storage.publicNumbers
