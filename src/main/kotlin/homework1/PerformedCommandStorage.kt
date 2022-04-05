@@ -1,19 +1,20 @@
 package homework.one
 
 class PerformedCommandStorage {
-    val actions = mutableListOf<Action>()
-    val numbers = mutableListOf<Int>()
+    private val actions = mutableListOf<Action>()
+    private val numbers = mutableListOf<Int>()
+    val publicNumbers: List<Int>
+    get() = numbers.toList()
 
     fun addAction(action: Action) {
-        action.doAction(this)
+        actions.add(action)
+        action.doAction(numbers)
     }
 
     fun cancelLastAction() {
-        if (actions.isEmpty()) {
-            throw IllegalArgumentException("Список пуст, отменять нечего")
-        }
+        require(actions.isNotEmpty()) { "Список пуст, отменять нечего" }
 
         val lastAction = actions.removeLast()
-        lastAction.cancelAction(this)
+        lastAction.cancelAction(numbers)
     }
 }

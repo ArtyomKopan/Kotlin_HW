@@ -1,58 +1,46 @@
 package homework.one
 
 interface Action {
-    fun doAction(storage: PerformedCommandStorage)
-
-    fun cancelAction(storage: PerformedCommandStorage)
+    fun doAction(numbers: MutableList<Int>)
+    fun cancelAction(numbers: MutableList<Int>)
 }
 
 class AddHead(private val element: Int) : Action {
-
-    override fun doAction(storage: PerformedCommandStorage) {
-        storage.numbers.add(0, element)
-        storage.actions.add(this)
+    override fun doAction(numbers: MutableList<Int>) {
+        numbers.add(0, element)
     }
 
-    override fun cancelAction(storage: PerformedCommandStorage) {
-        storage.numbers.removeFirst()
+    override fun cancelAction(numbers: MutableList<Int>) {
+        numbers.removeFirst()
     }
 }
 
 class AddTail(private val element: Int) : Action {
-
-    override fun doAction(storage: PerformedCommandStorage) {
-        storage.numbers.add(element)
-        storage.actions.add(this)
+    override fun doAction(numbers: MutableList<Int>) {
+        numbers.add(element)
     }
 
-    override fun cancelAction(storage: PerformedCommandStorage) {
-        storage.numbers.removeLast()
+    override fun cancelAction(numbers: MutableList<Int>) {
+        numbers.removeLast()
     }
 }
 
 class Move(private val from: Int, private val to: Int) : Action {
+    private fun isCorrectIndex(index: Int, numbers: List<Int>) = index >= 0 && index < numbers.size
 
-    private fun isCorrectIndex(index: Int, storage: PerformedCommandStorage): Boolean {
-        return index >= 0 && index < storage.numbers.size
+    override fun doAction(numbers: MutableList<Int>) {
+        require(
+            isCorrectIndex(from, numbers) && isCorrectIndex(to, numbers)
+        ) { "Команда MOVE некорректна: один из индексов выходит за границы списка" }
+
+        val movableElement = numbers[from]
+        numbers.removeAt(from)
+        numbers.add(to, movableElement)
     }
 
-    override fun doAction(storage: PerformedCommandStorage) {
-        if (!isCorrectIndex(from, storage) || !isCorrectIndex(to, storage)) {
-            throw IllegalArgumentException("Команда MOVE некорректна: один из индексов выходит за границы списка")
-        }
-
-        val movableElement = storage.numbers[from]
-
-        storage.numbers.removeAt(from)
-        storage.numbers.add(to, movableElement)
-
-        storage.actions.add(this)
-    }
-
-    override fun cancelAction(storage: PerformedCommandStorage) {
-        val movableElement = storage.numbers[to]
-
-        storage.numbers.removeAt(to)
-        storage.numbers.add(from, movableElement)
+    override fun cancelAction(numbers: MutableList<Int>) {
+        val movableElement = numbers[to]
+        numbers.removeAt(to)
+        numbers.add(from, movableElement)
     }
 }

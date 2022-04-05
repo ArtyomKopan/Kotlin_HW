@@ -10,10 +10,10 @@ internal class MoveTest {
         val addTail1 = AddTail(1)
         val addTail2 = AddTail(2)
         val move = Move(0, 1)
-        addTail1.doAction(storage)
-        addTail2.doAction(storage)
-        move.doAction(storage)
-        assertEquals(mutableListOf(2, 1), storage.numbers)
+        storage.addAction(addTail1)
+        storage.addAction(addTail2)
+        storage.addAction(move)
+        assertEquals(listOf(2, 1), storage.publicNumbers)
     }
 
     @Test
@@ -22,10 +22,10 @@ internal class MoveTest {
         val addTail1 = AddTail(1)
         val addTail2 = AddTail(2)
         val move = Move(1, 1)
-        addTail1.doAction(storage)
-        addTail2.doAction(storage)
-        move.doAction(storage)
-        assertEquals(mutableListOf(1, 2), storage.numbers)
+        storage.addAction(addTail1)
+        storage.addAction(addTail2)
+        storage.addAction(move)
+        assertEquals(listOf(1, 2), storage.publicNumbers)
     }
 
     @Test
@@ -34,10 +34,10 @@ internal class MoveTest {
         val addTail1 = AddTail(1)
         val addTail2 = AddTail(2)
         val move = Move(0, 1)
-        addTail1.doAction(storage)
-        addTail2.doAction(storage)
-        move.doAction(storage)
+        storage.addAction(addTail1)
+        storage.addAction(addTail2)
+        storage.addAction(move)
         storage.cancelLastAction()
-        assertEquals(mutableListOf(1, 2), storage.numbers)
+        assertEquals(listOf(1, 2), storage.publicNumbers)
     }
 }

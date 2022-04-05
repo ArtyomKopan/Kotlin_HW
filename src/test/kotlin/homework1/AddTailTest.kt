@@ -8,8 +8,8 @@ internal class AddTailTest {
     fun `test add tail when list is empty`() {
         val storage = PerformedCommandStorage()
         val action = AddTail(1)
-        action.doAction(storage)
-        assertEquals(mutableListOf(1), storage.numbers)
+        storage.addAction(action)
+        assertEquals(listOf(1), storage.publicNumbers)
     }
 
     @Test
@@ -17,17 +17,17 @@ internal class AddTailTest {
         val storage = PerformedCommandStorage()
         val action1 = AddTail(1)
         val action2 = AddTail(2)
-        action1.doAction(storage)
-        action2.doAction(storage)
-        assertEquals(mutableListOf(1, 2), storage.numbers)
+        storage.addAction(action1)
+        storage.addAction(action2)
+        assertEquals(listOf(1, 2), storage.publicNumbers)
     }
 
     @Test
     fun `cancel add tail test`() {
         val storage = PerformedCommandStorage()
         val action = AddTail(1)
-        action.doAction(storage)
+        storage.addAction(action)
         storage.cancelLastAction()
-        assertEquals(emptyList<Int>(), storage.numbers)
+        assertEquals(emptyList<Int>(), storage.publicNumbers)
     }
 }
