@@ -5,41 +5,53 @@ import java.util.Queue
 
 class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
     override var size = 0
-    override val keys = mutableSetOf<K>()
-    override val values = mutableListOf<V>()
-    override val entries = mutableSetOf<MutableMap.MutableEntry<K, V>>()
+
+    override val keys: MutableSet<K>
+        get() {
+            val listOfNodes = mutableListOf<AVLTreeNode<K, V>>()
+            dfs(treeRoot, listOfNodes)
+            val setOfKeys = mutableSetOf<K>()
+            listOfNodes.forEach { setOfKeys.add(it.key) }
+            return setOfKeys
+        }
+
+    override val values: MutableList<V>
+        get() {
+            val listOfNodes = mutableListOf<AVLTreeNode<K, V>>()
+            dfs(treeRoot, listOfNodes)
+            val listOfValues = mutableListOf<V>()
+            listOfNodes.forEach { listOfValues.add(it.value) }
+            return listOfValues
+        }
+
+    override val entries: MutableSet<MutableMap.MutableEntry<K, V>>
+        get() {
+            val listOfNodes = mutableListOf<AVLTreeNode<K, V>>()
+            dfs(treeRoot, listOfNodes)
+            val setOfEntries = mutableSetOf<MutableMap.MutableEntry<K, V>>()
+            listOfNodes.forEach { setOfEntries.add(Entry(it.key, it.value)) }
+            return setOfEntries
+        }
 
     private var treeRoot: AVLTreeNode<K, V>? = null
 
     override fun put(key: K, value: V): V? {
         val oldValue = treeRoot?.get(key)
+        treeRoot = insert(treeRoot, key, value)
         if (oldValue != null) {
-            entries.remove(Entry(key, oldValue))
+            size++
         }
-        if (treeRoot == null) {
-            treeRoot = AVLTreeNode(key, value)
-        } else {
-            treeRoot?.put(key, value)
-        }
-        treeRoot?.balance()
-        size++
-        keys.add(key)
-        values.add(value)
-        entries.add(Entry(key, value))
         return oldValue
     }
 
     override fun putAll(from: Map<out K, V>) = from.forEach { this[it.key] = it.value }
 
     override fun remove(key: K): V? {
-        val removedNode = treeRoot?.remove(key)
-        treeRoot = removedNode?.first
-        val removedValue = removedNode?.second
+        val removedNodeAndValue = treeRoot?.let { delete(it, key) }
+        treeRoot = removedNodeAndValue?.first
+        val removedValue = removedNodeAndValue?.second
         if (removedValue != null) {
             size--
-            keys.remove(key)
-            values.remove(removedValue)
-            entries.remove(Entry(key, removedValue))
         }
         return removedValue
     }
@@ -50,18 +62,9 @@ class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
 
     override fun get(key: K) = treeRoot?.get(key)
 
-    override fun isEmpty() = treeRoot == null
+    override fun isEmpty() = size == 0
 
-    override fun replace(key: K, value: V): V? {
-        val oldValue = treeRoot?.replaceValue(key, value)
-        if (oldValue != null) {
-            entries.remove(Entry(key, oldValue))
-            entries.add(Entry(key, value))
-            values.remove(oldValue)
-            values.add(value)
-        }
-        return oldValue
-    }
+    override fun replace(key: K, value: V): V? = treeRoot?.replaceValue(key, value)
 
     override fun clear() {
         treeRoot = null
@@ -91,5 +94,49 @@ class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
             }
         }
         return resultString
+    }
+
+    companion object {
+        private fun <K : Comparable<K>, V> dfs(node: AVLTreeNode<K, V>?, listOfNodes: MutableList<AVLTreeNode<K, V>>) {
+            node ?: return
+            listOfNodes.add(node)
+            dfs(node.left, listOfNodes)
+            dfs(node.right, listOfNodes)
+        }
+
+        private fun <K : Comparable<K>, V> insert(node: AVLTreeNode<K, V>?, key: K, value: V): AVLTreeNode<K, V>? {
+            node ?: return AVLTreeNode(key, value)
+            when {
+                key == node.key -> node.value = value
+                key > node.key -> node.right = insert(node.right, key, value)
+                key < node.key -> node.left = insert(node.left, key, value)
+            }
+            return node.balance()
+        }
+
+        private fun <K : Comparable<K>, V> delete(node: AVLTreeNode<K, V>, key: K): Pair<AVLTreeNode<K, V>?, V?> =
+            when {
+                key < node.key -> {
+                    val removedNode = node.left?.let { delete(it, key) }
+                    node.left = removedNode?.first
+                    Pair(node.balance(), removedNode?.second)
+                }
+                key > node.key -> {
+                    val removedNode = node.right?.let { delete(it, key) }
+                    node.right = removedNode?.first
+                    Pair(node.balance(), removedNode?.second)
+                }
+                else -> {
+                    val removedValue = node.value
+                    val minNode = node.right?.findMinimumNode()
+                    if (minNode == null) {
+                        Pair(node.left?.balance(), removedValue)
+                    } else {
+                        minNode.right = node.right?.removeMinimumNode()
+                        minNode.left = node.left
+                        Pair(minNode.balance(), removedValue)
+                    }
+                }
+            }
     }
 }

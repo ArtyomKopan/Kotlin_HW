@@ -2,9 +2,6 @@ package homework.three
 
 import java.lang.Integer.max
 
-const val RIGHT_REBALANCED_VALUE = 2
-const val LEFT_REBALANCED_VALUE = -2
-
 class AVLTreeNode<K : Comparable<K>, V>(var key: K, var value: V) {
     var left: AVLTreeNode<K, V>? = null
     var right: AVLTreeNode<K, V>? = null
@@ -16,74 +13,46 @@ class AVLTreeNode<K : Comparable<K>, V>(var key: K, var value: V) {
         height = max(left?.height ?: 0, right?.height ?: 0) + 1
     }
 
-    private fun copy(node: AVLTreeNode<K, V>) {
-        key = node.key
-        value = node.value
-        left = node.left
-        right = node.right
-        height = node.height
-    }
-
-    private fun rotateRight() {
+    private fun rotateRight(): AVLTreeNode<K, V> {
         val newNode = left
-        newNode ?: return
+        newNode ?: return this
         left = newNode.right
         newNode.right = this
         this.fixHeight()
         newNode.fixHeight()
-        this.copy(newNode)
+        return newNode
     }
 
-    private fun rotateLeft() {
+    private fun rotateLeft(): AVLTreeNode<K, V> {
         val newNode = right
-        newNode ?: return
+        newNode ?: return this
         right = newNode.left
         newNode.left = this
         this.fixHeight()
         newNode.fixHeight()
-        this.copy(newNode)
+        return newNode
     }
 
-    fun balance() {
+    fun balance(): AVLTreeNode<K, V>? {
         this.fixHeight()
-        if (this.balanceFactor == RIGHT_REBALANCED_VALUE) {
-            if ((right?.balanceFactor ?: 0) < 0) {
-                right?.rotateRight()
+        return when (this.balanceFactor) {
+            RIGHT_REBALANCED_VALUE -> {
+                if ((right?.balanceFactor ?: -1) < 0) {
+                    right?.rotateRight()
+                } else {
+                    this.rotateLeft()
+                }
             }
-            this.rotateLeft()
-        }
-        if (this.balanceFactor == LEFT_REBALANCED_VALUE) {
-            if ((left?.balanceFactor ?: 0) > 0) {
-                left?.rotateLeft()
+            LEFT_REBALANCED_VALUE -> {
+                if ((left?.balanceFactor ?: -1) > 0) {
+                    left?.rotateLeft()
+                } else {
+                    this.rotateRight()
+                }
             }
-            this.rotateRight()
+            else -> this
         }
     }
-
-    fun put(key: K, value: V): V? =
-        when {
-            this.key == key -> {
-                val oldValue = this.value
-                this.value = value
-                oldValue
-            }
-            key > this.key ->
-                if (right == null) {
-                    right = AVLTreeNode(key, value)
-                    this.balance()
-                    null
-                } else {
-                    right?.put(key, value)
-                }
-            else ->
-                if (left == null) {
-                    left = AVLTreeNode(key, value)
-                    this.balance()
-                    null
-                } else {
-                    left?.put(key, value)
-                }
-        }
 
     fun get(key: K): V? =
         when {
@@ -92,41 +61,16 @@ class AVLTreeNode<K : Comparable<K>, V>(var key: K, var value: V) {
             else -> right?.get(key)
         }
 
-    private fun removeMinimumNode(): AVLTreeNode<K, V>? {
-        left ?: return right
-        left = left?.removeMinimumNode()
-        this.balance()
-        return this
+    fun findMinimumNode(): AVLTreeNode<K, V>? {
+        left ?: return this
+        return left?.findMinimumNode()
     }
 
-    fun remove(key: K): Pair<AVLTreeNode<K, V>?, V?> =
-        when {
-            key < this.key -> {
-                val removedNode = left?.remove(key)
-                left = removedNode?.first
-                this.balance()
-                Pair(this, removedNode?.second)
-            }
-            key > this.key -> {
-                val removedNode = right?.remove(key)
-                right = removedNode?.first
-                this.balance()
-                Pair(this, removedNode?.second)
-            }
-            else -> {
-                val removedValue = value
-                val minNode = right?.removeMinimumNode()
-                if (minNode == null) {
-                    left?.balance()
-                    Pair(left, removedValue)
-                } else {
-                    minNode.right = right?.right
-                    minNode.left = left
-                    minNode.balance()
-                    Pair(minNode, removedValue)
-                }
-            }
-        }
+    fun removeMinimumNode(): AVLTreeNode<K, V>? {
+        left ?: return right
+        left = left?.removeMinimumNode()
+        return this.balance()
+    }
 
     fun replaceValue(key: K, newValue: V): V? =
         when {
@@ -138,4 +82,9 @@ class AVLTreeNode<K : Comparable<K>, V>(var key: K, var value: V) {
             this.key > key -> left?.replaceValue(key, newValue)
             else -> right?.replaceValue(key, newValue)
         }
+
+    companion object {
+        const val RIGHT_REBALANCED_VALUE = 2
+        const val LEFT_REBALANCED_VALUE = -2
+    }
 }
