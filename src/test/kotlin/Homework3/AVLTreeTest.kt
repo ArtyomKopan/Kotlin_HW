@@ -63,6 +63,23 @@ internal class AVLTreeTest {
         assertEquals(expectedValue, tree.replace(key, newValue))
     }
 
+    @ParameterizedTest
+    @MethodSource("addPutSizeTestInputData")
+    fun `put size test`(expectedSize: Int, source: Map<Int, String>) {
+        val tree = AVLTree<Int, String>()
+        tree.putAll(source)
+        assertEquals(expectedSize, tree.size)
+    }
+
+    @ParameterizedTest
+    @MethodSource("addRemoveSizeTestInputData")
+    fun `remove size test`(expectedSize: Int, removedKey: Int, source: Map<Int, String>) {
+        val tree = AVLTree<Int, String>()
+        tree.putAll(source)
+        tree.remove(removedKey)
+        assertEquals(expectedSize, tree.size)
+    }
+
     @Test
     fun `clear test`() {
         val tree = AVLTree<Int, String>()
@@ -129,6 +146,18 @@ internal class AVLTreeTest {
         fun addReplaceTestInputData() = listOf(
             Arguments.of("Teon Grayjoy", 4, "Stannis Barateon", defaultMap),
             Arguments.of(null, 6, "Dayeneris Targarien", defaultMap)
+        )
+
+        @JvmStatic
+        fun addPutSizeTestInputData() = listOf(
+            Arguments.of(0, emptyMap<Int, String>()),
+            Arguments.of(5, defaultMap)
+        )
+
+        @JvmStatic
+        fun addRemoveSizeTestInputData() = listOf(
+            Arguments.of(0, 4, emptyMap<Int, String>()),
+            Arguments.of(4, 2, defaultMap)
         )
     }
 }

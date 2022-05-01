@@ -83,6 +83,13 @@ class AVLTreeNode<K : Comparable<K>, V>(var key: K, var value: V) {
             else -> right?.replaceValue(key, newValue)
         }
 
+    fun dfs(listOfNodes: MutableList<AVLTreeNode<K, V>>): MutableList<AVLTreeNode<K, V>> {
+        listOfNodes.add(this)
+        left?.dfs(listOfNodes)
+        right?.dfs(listOfNodes)
+        return listOfNodes
+    }
+
     companion object {
         const val RIGHT_REBALANCED_VALUE = 2
         const val LEFT_REBALANCED_VALUE = -2
