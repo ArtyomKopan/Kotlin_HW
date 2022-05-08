@@ -8,13 +8,13 @@ class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
         private set
 
     override val keys: MutableSet<K>
-        get() = treeRoot?.dfs(mutableListOf())?.map { it.key }?.toMutableSet() ?: mutableSetOf()
+        get() = treeRoot?.dfs()?.map { it.key }?.toMutableSet() ?: mutableSetOf()
 
     override val values: MutableList<V>
-        get() = treeRoot?.dfs(mutableListOf())?.map { it.value }?.toMutableList() ?: mutableListOf()
+        get() = treeRoot?.dfs()?.map { it.value }?.toMutableList() ?: mutableListOf()
 
     override val entries: MutableSet<MutableMap.MutableEntry<K, V>>
-        get() = treeRoot?.dfs(mutableListOf())?.map { Entry(it.key, it.value) }?.toMutableSet() ?: mutableSetOf()
+        get() = treeRoot?.dfs()?.map { Entry(it.key, it.value) }?.toMutableSet() ?: mutableSetOf()
 
     private var treeRoot: AVLTreeNode<K, V>? = null
 

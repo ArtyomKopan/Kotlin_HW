@@ -10,7 +10,7 @@ class AVLTreeNode<K : Comparable<K>, V>(var key: K, var value: V) {
         get() = (right?.height ?: 0) - (left?.height ?: 0)
 
     private fun fixHeight() {
-        height = max(left?.height ?: 0, right?.height ?: 0) + 1
+        height = max(left?.height ?: -1, right?.height ?: -1) + 1
     }
 
     private fun rotateRight(): AVLTreeNode<K, V> {
@@ -83,10 +83,10 @@ class AVLTreeNode<K : Comparable<K>, V>(var key: K, var value: V) {
             else -> right?.replaceValue(key, newValue)
         }
 
-    fun dfs(listOfNodes: MutableList<AVLTreeNode<K, V>>): MutableList<AVLTreeNode<K, V>> {
-        listOfNodes.add(this)
-        left?.dfs(listOfNodes)
-        right?.dfs(listOfNodes)
+    fun dfs(): MutableList<AVLTreeNode<K, V>> {
+        val listOfNodes = mutableListOf(this)
+        left?.dfs()?.let { listOfNodes.addAll(it) }
+        right?.dfs()?.let { listOfNodes.addAll(it) }
         return listOfNodes
     }
 
