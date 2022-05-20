@@ -14,6 +14,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 @Suppress("FunctionNaming")
@@ -36,16 +38,18 @@ fun ButtonsList(
         }
     }
 
-    VerticalScrollbar(
-        modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
-        adapter = rememberScrollbarAdapter(scrollState = listState)
-    )
-
     var finalText = ""
     actionText.forEach { finalText += it }
 
     Text(
         text = finalText,
-        modifier = Modifier.padding(200.dp)
+        modifier = Modifier.padding(180.dp),
+        overflow = TextOverflow.Ellipsis,
+        maxLines = 40,
+        textAlign = TextAlign.Justify,
+    )
+    VerticalScrollbar(
+        modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
+        adapter = rememberScrollbarAdapter(scrollState = listState)
     )
 }
