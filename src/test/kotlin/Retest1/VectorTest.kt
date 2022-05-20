@@ -8,7 +8,7 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.lang.reflect.TypeVariable
 
-class ArithmeticInt(private val value: Int) : ArithmeticAvailable {
+class ArithmeticInt(private val value: Int) : ArithmeticAvailable<ArithmeticInt> {
     override operator fun plus(a: ArithmeticInt) = ArithmeticInt(value + a.value)
     override operator fun minus(a: ArithmeticInt) = ArithmeticInt(value - a.value)
     override operator fun times(a: ArithmeticInt) = ArithmeticInt(value * a.value)
