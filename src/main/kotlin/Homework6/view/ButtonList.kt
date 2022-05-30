@@ -19,23 +19,25 @@ import androidx.compose.ui.unit.sp
 fun ButtonsList(
     state: ViewModel.State,
     onButtonSelect: (Int) -> Unit,
-) = Box(modifier = Modifier.fillMaxWidth().fillMaxHeight(), contentAlignment = Alignment.Center) {
+) {
+    Box(modifier = Modifier.fillMaxWidth().fillMaxHeight(), contentAlignment = Alignment.Center) {
 
-    Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
-        Row(modifier = Modifier.fillMaxWidth().height(250.dp).padding(20.dp)) {
-            ButtonItem(state, 0, onClick = onButtonSelect)
-            ButtonItem(state, 1, onClick = onButtonSelect)
-            ButtonItem(state, 2, onClick = onButtonSelect)
-        }
-        Row(modifier = Modifier.fillMaxWidth().height(250.dp).padding(20.dp)) {
-            ButtonItem(state, 3, onClick = onButtonSelect)
-            ButtonItem(state, 4, onClick = onButtonSelect)
-            ButtonItem(state, 5, onClick = onButtonSelect)
-        }
-        Row(modifier = Modifier.fillMaxWidth().height(250.dp).padding(20.dp)) {
-            ButtonItem(state, 6, onClick = onButtonSelect)
-            ButtonItem(state, 7, onClick = onButtonSelect)
-            ButtonItem(state, 8, onClick = onButtonSelect)
+        Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
+            Row(modifier = Modifier.fillMaxWidth().height(250.dp).padding(20.dp)) {
+                ButtonItem(state, 0, onClick = onButtonSelect)
+                ButtonItem(state, 1, onClick = onButtonSelect)
+                ButtonItem(state, 2, onClick = onButtonSelect)
+            }
+            Row(modifier = Modifier.fillMaxWidth().height(250.dp).padding(20.dp)) {
+                ButtonItem(state, 3, onClick = onButtonSelect)
+                ButtonItem(state, 4, onClick = onButtonSelect)
+                ButtonItem(state, 5, onClick = onButtonSelect)
+            }
+            Row(modifier = Modifier.fillMaxWidth().height(250.dp).padding(20.dp)) {
+                ButtonItem(state, 6, onClick = onButtonSelect)
+                ButtonItem(state, 7, onClick = onButtonSelect)
+                ButtonItem(state, 8, onClick = onButtonSelect)
+            }
         }
     }
 }

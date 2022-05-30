@@ -21,8 +21,17 @@ internal fun ButtonItem(state: ViewModel.State, buttonId: Int, onClick: (Int) ->
     val button = state.buttons[buttonId]
     var text by remember { mutableStateOf(button.symbol?.toString() ?: " ") }
 
+    fun onAdvancedClick() {
+        onClick(button.id)
+        if (state.gameMode == GameMode.BOT && state.winStatus == WinStatus.CONTINUES) {
+            val numberBotButton = state.unusedButtons[state.unusedButtons.indices.random()]
+            onClick(numberBotButton)
+            /* отладочный вывод */ println("${button.id} $numberBotButton")
+        }
+    }
+
     Button(
-        onClick = { onClick(button.id); text = button.symbol.toString() },
+        onClick = { onAdvancedClick(); text = button.symbol.toString() },
         modifier = Modifier.width(200.dp).height(200.dp).padding(10.dp),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color(0, 0, 0, 0))
     ) {
@@ -36,14 +45,6 @@ internal fun ButtonItem(state: ViewModel.State, buttonId: Int, onClick: (Int) ->
             fontWeight = FontWeight.Bold
         )
 
-        // Тестовый вывод
-        if (state.winStatus != WinStatus.CONTINUES) {
-            state.screen = Screen.END_GAME
-            when (state.winStatus) {
-                WinStatus.CROSSES -> Text("Крестики выиграли!")
-                WinStatus.NOUGHTS -> Text("Нолики выиграли!")
-                WinStatus.BALANCE -> Text("Ничья!")
-            }
-        }
+        CheckWin(state)
     }
 }
