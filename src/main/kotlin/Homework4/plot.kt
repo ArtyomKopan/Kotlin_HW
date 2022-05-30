@@ -2,6 +2,7 @@ package homework.four
 
 import jetbrains.letsPlot.export.ggsave
 import jetbrains.letsPlot.geom.geomPoint
+import jetbrains.letsPlot.label.labs
 import jetbrains.letsPlot.letsPlot
 import jetbrains.letsPlot.scale.scaleXContinuous
 import java.util.Scanner
@@ -41,9 +42,9 @@ fun main() {
     val sortingTime = meanSortingTime.map { it.value }.toList()
     val data = mapOf<String, Any>("Threads count" to threadsCount, "Sorting time (ms)" to sortingTime)
 
-    val fig = letsPlot(data) + geomPoint(
+    val fig = letsPlot(data) + labs(title = "Multithreading merge sort time (array size = $size)") + geomPoint(
         color = "dark-green",
-        size = FIGURE_POINT_SIZE
+        size = FIGURE_POINT_SIZE,
     ) { x = "Threads count"; y = "Sorting time (ms)" } + scaleXContinuous(
         breaks = THREADS_COUNT_LIST
     )

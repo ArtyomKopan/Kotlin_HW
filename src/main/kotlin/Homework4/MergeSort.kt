@@ -1,5 +1,8 @@
 package homework.four
 
+import kotlin.math.ceil
+import kotlin.math.floor
+
 class MergeSort<K : Comparable<K>>(
     val array: Array<K>,
     private val maxThreadsCount: Int,
@@ -46,14 +49,17 @@ class MergeSort<K : Comparable<K>>(
             if (threadsCount >= maxThreadsCount - 1) {
                 singleThreadMergeSort(left, right)
             } else {
+                val leftThreadsCount = ceil(maxThreadsCount.toDouble() / 2).toInt()
+                val rightThreadsCount = floor(maxThreadsCount.toDouble() / 2).toInt()
                 val leftThread =
-                    Thread { MergeSort(array, maxThreadsCount, threadsCount++).multiThreadMergeSort(left, middle) }
+                    Thread { MergeSort(array, leftThreadsCount, threadsCount++).multiThreadMergeSort(left, middle) }
                 val rightThread =
-                    Thread { MergeSort(array, maxThreadsCount, threadsCount++).multiThreadMergeSort(middle, right) }
+                    Thread { MergeSort(array, rightThreadsCount, threadsCount++).multiThreadMergeSort(middle, right) }
                 leftThread.start()
                 rightThread.start()
                 leftThread.join()
                 rightThread.join()
+
                 merge(left, right)
             }
         }
