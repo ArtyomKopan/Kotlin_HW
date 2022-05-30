@@ -1,10 +1,10 @@
 package homework.five
 
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-
-class MergeSort<K : Comparable<K>>(val array: Array<K>) {
-    private fun merge(left: Int, right: Int) {
+@Suppress("MemberNameEqualsClassName")
+abstract class MergeSort<K : Comparable<K>>(
+    open val array: Array<K>
+) {
+    protected fun merge(left: Int, right: Int) {
         var leftPointer = 0
         var rightPointer = 0
         val middle = (left + right) / 2
@@ -30,20 +30,14 @@ class MergeSort<K : Comparable<K>>(val array: Array<K>) {
         (0 until right - left).forEach { array[left + it] = sortedArray[it] }
     }
 
-    fun coroutineMergeSort(left: Int, right: Int) {
-        runBlocking {
-            if (left + 1 < right) {
-                val middle = (left + right) / 2
-                val leftSorting = launch {
-                    coroutineMergeSort(left, middle)
-                }
-                leftSorting.join()
-                val rightSorting = launch {
-                    coroutineMergeSort(middle, right)
-                }
-                rightSorting.join()
-                merge(left, right)
-            }
+    protected fun singleThreadMergeSort(left: Int, right: Int) {
+        if (left + 1 < right) {
+            val middle = (left + right) / 2
+            singleThreadMergeSort(left, middle)
+            singleThreadMergeSort(middle, right)
+            merge(left, right)
         }
     }
+
+    abstract fun mergeSort(left: Int, right: Int)
 }

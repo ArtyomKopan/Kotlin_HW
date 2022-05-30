@@ -1,48 +1,87 @@
 package homework.five
 
 import jetbrains.letsPlot.export.ggsave
-import jetbrains.letsPlot.geom.geomLine
+import jetbrains.letsPlot.geom.geomPoint
+import jetbrains.letsPlot.label.labs
 import jetbrains.letsPlot.letsPlot
 import jetbrains.letsPlot.scale.scaleXContinuous
+import java.util.Scanner
 import kotlin.random.Random
 
 @Suppress("MagicNumber")
-val ARRAY_SIZE_LIST = (1..100).map { it * 100 }.toList()
+val THREADS_COUNT_LIST = (0..7).map { power(2, it) }.toList()
 
 const val NANO_IN_MILLIS = 1e6
 const val MEASUREMENT_COUNT = 10
-const val FIGURE_LINE_SIZE = 1.0
+const val FIGURE_POINT_SIZE = 4.0
 
 fun main() {
-    // ключ - размер массива, значение - время сортировки в миллисекундах
-    val meanSortingTime = mutableMapOf<Int, Double>()
-    for (arraySize in ARRAY_SIZE_LIST) {
-        var sortingTime = 0.0
+    print("Введите размер массива: ")
+    val size = Scanner(System.`in`).nextInt()
+    val array = Array(size) { Random.nextInt() }
+
+    // в словаре время указано в миллисекундах
+    val meanMultithreadingSortingTime = mutableMapOf<Int, Double>()
+    val meanCoroutineSortingTime = mutableMapOf<Int, Double>()
+    for (threadsCount in THREADS_COUNT_LIST) {
+        var multithreadingSortingTime = 0.0
+        var coroutineSortingTime = 0.0
         repeat((1..MEASUREMENT_COUNT).count()) {
-            val array = Array(arraySize) { Random.nextInt() }
-            val ms = MergeSort(array)
-            val startTime = System.nanoTime()
-            ms.coroutineMergeSort(0, array.size)
-            val finishTime = System.nanoTime()
-            sortingTime += (finishTime - startTime)
+            val multithreadingSortObject = MultithreadingMergeSort(array, threadsCount, 0)
+            var startTime = System.nanoTime()
+            multithreadingSortObject.mergeSort(0, array.size)
+            var finishTime = System.nanoTime()
+            multithreadingSortingTime += (finishTime - startTime)
+
+            val coroutineSortObject = CoroutineMergeSort(array, threadsCount, 0)
+            startTime = System.nanoTime()
+            coroutineSortObject.mergeSort(0, array.size)
+            finishTime = System.nanoTime()
+            coroutineSortingTime += (finishTime - startTime)
         }
-        sortingTime /= MEASUREMENT_COUNT
-        sortingTime /= NANO_IN_MILLIS // переводим наносекунды в миллисекунды
-        meanSortingTime[arraySize] = sortingTime
+
+        multithreadingSortingTime /= MEASUREMENT_COUNT
+        multithreadingSortingTime /= NANO_IN_MILLIS // переводим наносекунды в миллисекунды
+        meanMultithreadingSortingTime[threadsCount] = multithreadingSortingTime
+
+        coroutineSortingTime /= MEASUREMENT_COUNT
+        coroutineSortingTime /= NANO_IN_MILLIS
+        meanCoroutineSortingTime[threadsCount] = coroutineSortingTime
     }
 
-    meanSortingTime.forEach { println("${it.key} ${it.value}") }
+    println("Время сортировки многопоточным способом: ")
+    meanMultithreadingSortingTime.forEach { println("${it.key} ${it.value}") }
+    println()
+    println("Время сортировки с помощью корутин: ")
+    meanCoroutineSortingTime.forEach { println("${it.key} ${it.value}") }
 
-    val arraysSize = meanSortingTime.map { it.key }.toList()
-    val sortingTime = meanSortingTime.map { it.value }.toList()
-    val data = mapOf<String, Any>("Array size" to arraysSize, "Sorting time (ms)" to sortingTime)
+    // строим график для многопоточной сортировки
+    val threadsCount = meanMultithreadingSortingTime.map { it.key }.toList()
+    val multithreadingSortingTime = meanMultithreadingSortingTime.map { it.value }.toList()
+    val multithreadingData =
+        mapOf<String, Any>("Threads count" to threadsCount, "Sorting time (ms)" to multithreadingSortingTime)
 
-    val fig = letsPlot(data) + geomLine(
-        color = "dark-green",
-        size = FIGURE_LINE_SIZE
-    ) { x = "Array size"; y = "Sorting time (ms)" } + scaleXContinuous(
-        breaks = ARRAY_SIZE_LIST
-    )
+    val multithreadingSortFigure =
+        letsPlot(multithreadingData) + labs(title = "Multithreading merge sort time (array size = $size)") + geomPoint(
+            color = "dark-green",
+            size = FIGURE_POINT_SIZE
+        ) { x = "Threads count"; y = "Sorting time (ms)" } + scaleXContinuous(
+            breaks = THREADS_COUNT_LIST
+        )
 
-    ggsave(fig, "plot.png")
+    ggsave(multithreadingSortFigure, "multithreadingPlot$size.png")
+
+    // строим график корутинной сортировки
+    val coroutineSortingTime = meanCoroutineSortingTime.map { it.value }.toList()
+    val coroutineData =
+        mapOf<String, Any>("Coroutines count" to threadsCount, "Sorting time (ms)" to coroutineSortingTime)
+    val coroutineSortFigure =
+        letsPlot(coroutineData) + labs(title = "Coroutine merge sort time (array size = $size)") + geomPoint(
+            color = "dark-green",
+            size = FIGURE_POINT_SIZE
+        ) { x = "Coroutines count"; y = "Sorting time (ms)" } + scaleXContinuous(
+            breaks = THREADS_COUNT_LIST
+        )
+
+    ggsave(coroutineSortFigure, "coroutinePlot$size.png")
 }
