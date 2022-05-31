@@ -1,3 +1,5 @@
+@file:Suppress("OPT_IN_IS_NOT_ENABLED")
+
 package homework.six
 
 import androidx.compose.foundation.background
@@ -35,7 +37,7 @@ fun ButtonsList(state: ViewModel.State, onButtonSelect: (Int) -> Unit) =
         }
     }
 
-@Suppress("FunctionNaming", "OPT_IN_IS_NOT_ENABLED", "MagicNumber")
+@Suppress("FunctionNaming", "MagicNumber")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ShowWinDialogWindow(state: ViewModel.State) {
