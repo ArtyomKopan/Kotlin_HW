@@ -1,5 +1,6 @@
 package view
 
+import Symbol
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -21,12 +22,12 @@ import androidx.compose.ui.unit.sp
 
 @Suppress("FunctionNaming")
 @Composable
-fun SideChoice(onClick1: () -> Unit, onClick2: () -> Unit) = Box(
+fun SideChoice(onClick: (Symbol) -> Unit) = Box(
     modifier = Modifier.fillMaxWidth().fillMaxHeight(), contentAlignment = Alignment.Center
 ) {
     Column(modifier = Modifier.width(600.dp).height(800.dp)) {
         Button(
-            onClick = onClick1,
+            onClick = { onClick(Symbol.CROSS) },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(backgroundColor = Color(0, 0, 0, 0))
         ) {
@@ -40,7 +41,7 @@ fun SideChoice(onClick1: () -> Unit, onClick2: () -> Unit) = Box(
         }
 
         Button(
-            onClick = onClick2,
+            onClick = { onClick(Symbol.NOUGHT) },
             modifier = Modifier.fillMaxWidth().padding(0.dp, 100.dp),
             colors = ButtonDefaults.buttonColors(backgroundColor = Color(0, 0, 0, 0))
         ) {

@@ -1,13 +1,6 @@
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.sp
-import view.CheckWin
 
 class ViewModel {
     var state: State by mutableStateOf(initialState())
@@ -18,9 +11,10 @@ class ViewModel {
         var currentSymbol: Symbol, // показывает, чей сейчас ход
         var screen: Screen,
         var winStatus: WinStatus,
-        var userSide: Symbol?, // в режиме бота показывает, за какую сторону играет игрок
+        var userSide: Symbol, // в режиме бота показывает, за какую сторону играет игрок
         val unusedButtons: MutableList<Int>, // в режиме бота содержит № ещё не использованных кнопок
-        var gameMode: GameMode
+        var gameMode: GameMode,
+        var moveNumber: Int
     )
 
     private fun initialState(): State = State(
@@ -28,25 +22,41 @@ class ViewModel {
         currentSymbol = Symbol.CROSS,
         screen = Screen.START_GAME,
         winStatus = WinStatus.CONTINUES,
-        userSide = null,
+        userSide = Symbol.CROSS,
         unusedButtons = (0 until BUTTONS_COUNT).toMutableList(),
-        gameMode = GameMode.SINGLE
+        gameMode = GameMode.SINGLE,
+        moveNumber = 0
     )
 
     private inline fun updateState(update: State.() -> State) {
         state = state.update()
     }
 
-    fun onButtonSelect(buttonId: Int) = updateState { // ход на игровом поле
+    fun onButtonSelect(buttonId: Int) = updateState {
+        if (moveNumber == 1 && gameMode == GameMode.BOT && userSide == Symbol.NOUGHT) {
+            currentSymbol = Symbol.NOUGHT
+        }
         if (!buttons[buttonId].isActivate) {
-            buttons[buttonId].symbol = currentSymbol
-            buttons[buttonId].isActivate = true
-            currentSymbol = if (currentSymbol == Symbol.CROSS) Symbol.NOUGHT else Symbol.CROSS
+            val buttonsAfterUserMove = makeMove(buttons, buttonId, currentSymbol)
             unusedButtons.remove(buttonId)
             isWin()
+            var buttonsAfterBotMove: List<Button> = buttonsAfterUserMove
+            if (gameMode == GameMode.BOT && winStatus == WinStatus.CONTINUES) {
+                buttonsAfterBotMove = botMakeMove(buttonsAfterUserMove, unusedButtons, userSide, gameMode)
+                isWin()
+            }
+            if (gameMode == GameMode.SINGLE) {
+                currentSymbol = if (currentSymbol == Symbol.CROSS) Symbol.NOUGHT else Symbol.CROSS
+            }
+            copy(
+                currentSymbol = if (userSide == Symbol.NOUGHT) Symbol.NOUGHT else currentSymbol,
+                buttons = buttonsAfterBotMove,
+                winStatus = winStatus,
+                moveNumber = if (gameMode == GameMode.SINGLE) moveNumber + 1 else moveNumber + 2
+            )
+        } else {
+            copy(currentSymbol = currentSymbol)
         }
-        // isWin()
-        copy(currentSymbol = currentSymbol)
     }
 
     fun onStartGame() = updateState {
@@ -63,14 +73,13 @@ class ViewModel {
         copy(screen = Screen.SIDE_CHOICE)
     }
 
-    fun onChoiceCrosses() = updateState {
-        screen = Screen.GAME_FIELD
-        copy(userSide = Symbol.CROSS)
-    }
-
-    fun onChoiceNoughts() = updateState {
-        screen = Screen.GAME_FIELD
-        copy(userSide = Symbol.NOUGHT)
+    fun onChoiceSide(userSide: Symbol) = updateState {
+        copy(
+            userSide = userSide,
+            screen = Screen.GAME_FIELD,
+            buttons = makeStartMove(buttons, userSide, gameMode),
+            moveNumber = if (userSide == Symbol.NOUGHT) 1 else 0
+        )
     }
 
     private fun isWin() = updateState {

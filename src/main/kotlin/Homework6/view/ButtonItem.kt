@@ -1,6 +1,6 @@
 package view
 
-import androidx.compose.runtime.*
+import Button
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -17,25 +17,19 @@ import androidx.compose.ui.unit.sp
 
 @Suppress("FunctionNaming")
 @Composable
-internal fun ButtonItem(state: ViewModel.State, buttonId: Int, onClick: (Int) -> Unit) {
-    val button = state.buttons[buttonId]
-    var text by remember { mutableStateOf(button.symbol?.toString() ?: " ") }
-
-    fun onAdvancedClick() {
-        onClick(button.id)
-        if (state.gameMode == GameMode.BOT && state.winStatus == WinStatus.CONTINUES) {
-            val numberBotButton = state.unusedButtons[state.unusedButtons.indices.random()]
-            onClick(numberBotButton)
-            /* отладочный вывод */ println("${button.id} $numberBotButton")
-        }
-    }
-
+internal fun ButtonItem(state: ViewModel.State, button: Button, onClick: () -> Unit) {
     Button(
-        onClick = { onAdvancedClick(); text = button.symbol.toString() },
+        onClick = {
+            onClick()
+        },
         modifier = Modifier.width(200.dp).height(200.dp).padding(10.dp),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color(0, 0, 0, 0))
     ) {
-        val outputSymbol = if (text == "CROSS") "X" else if (text == "NOUGHT") "O" else " "
+        val outputSymbol = when (button.symbol) {
+            Symbol.CROSS -> "X"
+            Symbol.NOUGHT -> "O"
+            else -> " "
+        }
         val textColor = if (outputSymbol == "X") Color.Red else Color.Blue
         Text(
             outputSymbol,
@@ -45,6 +39,6 @@ internal fun ButtonItem(state: ViewModel.State, buttonId: Int, onClick: (Int) ->
             fontWeight = FontWeight.Bold
         )
 
-        CheckWin(state)
+        ShowWinDialogWindow(state)
     }
 }
