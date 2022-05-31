@@ -1,3 +1,5 @@
+package homework.six
+
 const val BUTTONS_COUNT = 9
 
 fun fetchButtons() = (0 until BUTTONS_COUNT).map { Button(it) }.toList()

@@ -1,3 +1,5 @@
+package homework.six
+
 fun makeMove(buttons: List<Button>, buttonId: Int, symbol: Symbol): List<Button> {
     buttons[buttonId].symbol = symbol
     buttons[buttonId].isActivate = true

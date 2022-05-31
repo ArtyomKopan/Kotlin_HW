@@ -1,6 +1,5 @@
-package view
+package homework.six
 
-import ViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

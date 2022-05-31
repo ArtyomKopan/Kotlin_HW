@@ -1,6 +1,5 @@
-package view
+package homework.six
 
-import Symbol
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight

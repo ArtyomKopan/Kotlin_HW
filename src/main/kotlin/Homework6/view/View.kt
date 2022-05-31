@@ -1,7 +1,5 @@
-package view
+package homework.six
 
-import Screen
-import ViewModel
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable

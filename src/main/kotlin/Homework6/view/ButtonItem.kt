@@ -1,6 +1,5 @@
-package view
+package homework.six
 
-import Button
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
