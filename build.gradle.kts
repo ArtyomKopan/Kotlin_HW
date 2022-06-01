@@ -21,6 +21,11 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.8.2"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation(kotlin("test"))
+    implementation("org.jetbrains.lets-plot:lets-plot-kotlin-jvm:3.2.0")
+    implementation("org.jetbrains.lets-plot:lets-plot-common:2.3.0")
+    implementation("org.jetbrains.lets-plot:lets-plot-image-export:2.3.0")
+    implementation("org.slf4j:slf4j-nop:1.7.36")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
     implementation(compose.desktop.currentOs)
     implementation("org.jsoup:jsoup:1.14.3")
 }
