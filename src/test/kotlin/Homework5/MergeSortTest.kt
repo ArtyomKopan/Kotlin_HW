@@ -6,11 +6,19 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import kotlin.random.Random
 
-internal class MultithreadingMergeSortTest {
+internal class MergeSortTest {
     @ParameterizedTest
     @MethodSource("addTestInputData")
     fun <K : Comparable<K>> multiThreadMergeSortTest(array: Array<K>, maxThreadsCount: Int) {
         val ms = MultithreadingMergeSort(array, maxThreadsCount, 0)
+        ms.mergeSort(0, array.size)
+        assertTrue(ms.array.contentEquals(array.sortedArray()))
+    }
+
+    @ParameterizedTest
+    @MethodSource("addTestInputData")
+    fun <K : Comparable<K>> coroutineMergeSortTest(array: Array<K>, maxCoroutinesCount: Int) {
+        val ms = CoroutineMergeSort(array, maxCoroutinesCount, 0)
         ms.mergeSort(0, array.size)
         assertTrue(ms.array.contentEquals(array.sortedArray()))
     }
