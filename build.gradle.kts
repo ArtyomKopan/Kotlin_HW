@@ -21,6 +21,7 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.8.2"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation(kotlin("test"))
+    implementation("com.github.ajalt.clikt:clikt:3.4.2")
     implementation("org.jetbrains.lets-plot:lets-plot-kotlin-jvm:3.2.0")
     implementation("org.jetbrains.lets-plot:lets-plot-common:2.3.0")
     implementation("org.jetbrains.lets-plot:lets-plot-image-export:2.3.0")
