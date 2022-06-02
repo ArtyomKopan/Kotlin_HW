@@ -1,4 +1,4 @@
-package retest.two
+package homework.six
 
 import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
@@ -9,7 +9,7 @@ import androidx.compose.ui.window.rememberWindowState
 fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
-        title = "Bash Aggregator",
+        title = "Крестики-нолики",
         state = rememberWindowState(width = 800.dp, height = 1000.dp)
     ) {
         val viewModel = remember { ViewModel() }

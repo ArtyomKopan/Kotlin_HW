@@ -1,6 +1,5 @@
-package view
+package retest.two
 
-import ViewModel
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
