@@ -16,7 +16,11 @@ fun View(viewModel: ViewModel) {
                     StartGame(viewModel::onStartGame)
                 }
                 Screen.MODE_CHOICE -> {
-                    GameModeChoice(viewModel::onChoiceSingleMode, viewModel::onChoiceBotMode)
+                    GameModeChoice(
+                        viewModel::onChoiceSingleMode,
+                        viewModel::onChoiceBotMode,
+                        viewModel::onChoiceStrategyBotMode
+                    )
                 }
                 Screen.SIDE_CHOICE -> {
                     SideChoice(viewModel::onChoiceSide)

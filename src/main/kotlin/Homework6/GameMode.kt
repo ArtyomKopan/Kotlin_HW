@@ -1,5 +1,5 @@
 package homework.six
 
 enum class GameMode {
-    SINGLE, BOT
+    SINGLE, BOT, STRATEGY_BOT
 }

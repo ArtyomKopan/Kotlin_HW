@@ -6,10 +6,21 @@ fun makeMove(buttons: List<Button>, buttonId: Int, symbol: Symbol): List<Button>
     return buttons
 }
 
-fun botChooseButton(buttons: List<Button>, unusedButtons: MutableList<Int>, symbol: Symbol): List<Button> {
-    val buttonId = unusedButtons[unusedButtons.indices.random()]
+fun botChooseButton(
+    buttons: List<Button>,
+    unusedButtons: MutableList<Int>,
+    botSide: Symbol,
+    gameMode: GameMode
+): List<Button> {
+    val userSide = if (botSide == Symbol.CROSS) Symbol.NOUGHT else Symbol.CROSS
+    val buttonId = when (gameMode) {
+        GameMode.BOT -> unusedButtons[unusedButtons.indices.random()]
+        GameMode.STRATEGY_BOT -> minimax(buttons, userSide, botSide, botSide).second
+        else -> -1
+    }
+
     unusedButtons.remove(buttonId)
-    return makeMove(buttons, buttonId, symbol)
+    return makeMove(buttons, buttonId, botSide)
 }
 
 fun botMakeMove(
@@ -23,7 +34,7 @@ fun botMakeMove(
     }
     val botSide = if (userSide == Symbol.CROSS) Symbol.NOUGHT else Symbol.CROSS
     return when (gameMode) {
-        GameMode.BOT -> botChooseButton(buttons, unusedButtons, botSide)
+        GameMode.BOT, GameMode.STRATEGY_BOT -> botChooseButton(buttons, unusedButtons, botSide, gameMode)
         else -> buttons
     }
 }

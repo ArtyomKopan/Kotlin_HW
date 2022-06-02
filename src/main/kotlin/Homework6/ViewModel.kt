@@ -35,7 +35,7 @@ class ViewModel {
     }
 
     fun onButtonSelect(buttonId: Int) = updateState {
-        if (moveNumber == 1 && gameMode == GameMode.BOT && userSide == Symbol.NOUGHT) {
+        if (moveNumber == 1 && (gameMode != GameMode.SINGLE) && userSide == Symbol.NOUGHT) {
             currentSymbol = Symbol.NOUGHT
         }
         if (!buttons[buttonId].isActivate) {
@@ -43,7 +43,7 @@ class ViewModel {
             unusedButtons.remove(buttonId)
             isWin()
             var buttonsAfterBotMove: List<Button> = buttonsAfterUserMove
-            if (gameMode == GameMode.BOT && winStatus == WinStatus.CONTINUES) {
+            if ((gameMode != GameMode.SINGLE) && winStatus == WinStatus.CONTINUES) {
                 buttonsAfterBotMove = botMakeMove(buttonsAfterUserMove, unusedButtons, userSide, gameMode)
                 isWin()
             }
@@ -72,6 +72,11 @@ class ViewModel {
 
     fun onChoiceBotMode() = updateState {
         gameMode = GameMode.BOT
+        copy(screen = Screen.SIDE_CHOICE)
+    }
+
+    fun onChoiceStrategyBotMode() = updateState {
+        gameMode = GameMode.STRATEGY_BOT
         copy(screen = Screen.SIDE_CHOICE)
     }
 

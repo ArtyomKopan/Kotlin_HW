@@ -1,72 +1,51 @@
 package homework.six
 
-import kotlin.math.max
-
-fun isEven(x: Int) = x % 2 == 0
+const val WIN_SCORE = 10
+const val FAIL_SCORE = -10
+const val BALANCE_SCORE = 0
 
 fun emptyIndices(buttons: List<Button>) = buttons.filter { it.symbol == null }.map { it.id }.toMutableList()
 
-fun minimaxScore(
+fun score(buttons: List<Button>, botSide: Symbol): Int {
+    val status = getWinStatus(buttons)
+    return when {
+        botSide == Symbol.CROSS && status == WinStatus.CROSSES -> WIN_SCORE
+        botSide == Symbol.NOUGHT && status == WinStatus.NOUGHTS -> WIN_SCORE
+        botSide == Symbol.CROSS && status == WinStatus.NOUGHTS -> FAIL_SCORE
+        botSide == Symbol.NOUGHT && status == WinStatus.CROSSES -> FAIL_SCORE
+        else -> BALANCE_SCORE
+    }
+}
+
+fun minimax(
     buttons: List<Button>,
     userSide: Symbol,
     botSide: Symbol,
-    iterationNumber: Int
-): Int {
-    val status = getWinStatus(buttons)
-    val score = when {
-        status == WinStatus.CROSSES && userSide == Symbol.CROSS -> -10
-        status == WinStatus.CROSSES && userSide == Symbol.NOUGHT -> 10
-        status == WinStatus.NOUGHTS && userSide == Symbol.CROSS -> 10
-        status == WinStatus.NOUGHTS && userSide == Symbol.NOUGHT -> -10
-        status == WinStatus.BALANCE -> 0
-        else -> null
-    }
-    if (score != null) {
-        return score
+    currentSymbol: Symbol
+): Pair<Int, Int> {
+    // currentSymbol - показывает, чей сейчас ход
+    if (getWinStatus(buttons) != WinStatus.CONTINUES) {
+        return Pair(score(buttons, botSide), -1)
     }
 
-    val indices = emptyIndices(buttons)
-    var newScore = -10
-    for (index in indices) {
-        buttons[index].symbol = if (isEven(iterationNumber)) botSide else userSide
-        newScore = max(newScore, minimaxScore(buttons, userSide, botSide, iterationNumber + 1))
-        buttons[index].symbol = null
+    val nextSymbol = if (currentSymbol == userSide) botSide else userSide
+
+    val moves = mutableMapOf<Int, Int>() // key == move, value == score
+
+    for (move in emptyIndices(buttons)) {
+        buttons[move].symbol = nextSymbol
+        val score = minimax(buttons, userSide, botSide, nextSymbol).first
+        moves[move] = score
+        buttons[move].symbol = null
     }
 
-    return newScore
-}
-
-fun minimax(buttons: List<Button>, userSide: Symbol): Int {
-    val newButtons = buttons.toMutableList()
-    val botSide = if (userSide == Symbol.CROSS) Symbol.NOUGHT else Symbol.CROSS
-    val indices = emptyIndices(buttons)
-    val moves = mutableMapOf<Int, Int>() // оценка для каждой пустой клетки
-
-    for (index in indices) {
-        newButtons[index].symbol = botSide
-        moves[index] = minimaxScore(newButtons, userSide, botSide, 1)
-        newButtons[index].symbol = null
+    return if (currentSymbol == botSide) {
+        val maxScore = moves.maxOf { it.value }
+        val maxScoreIndex = moves.filter { it.value == maxScore }.map { it.key }.first()
+        Pair(maxScore, maxScoreIndex)
+    } else {
+        val minScore = moves.minOf { it.value }
+        val minScoreIndex = moves.filter { it.value == minScore }.map { it.key }.first()
+        Pair(minScore, minScoreIndex)
     }
-
-    val maxScore = moves.maxOf { it.value }
-    val bestMove = moves.filter { it.value == maxScore }.map { it.key }.toList().first()
-    return bestMove
-}
-
-// для отладки
-fun minimaxList(buttons: List<Button>, userSide: Symbol): List<Pair<Int, Int>> {
-    val newButtons = buttons.toMutableList()
-    val botSide = if (userSide == Symbol.CROSS) Symbol.NOUGHT else Symbol.CROSS
-    val indices = emptyIndices(buttons)
-    val moves = mutableMapOf<Int, Int>() // оценка для каждой пустой клетки
-
-    for (index in indices) {
-        newButtons[index].symbol = botSide
-        moves[index] = minimaxScore(newButtons, userSide, botSide, 1)
-        newButtons[index].symbol = null
-    }
-
-    val maxScore = moves.maxOf { it.value }
-    val bestMove = moves.filter { it.value == maxScore }.map { Pair(it.key, it.value) }.toList()
-    return bestMove
 }

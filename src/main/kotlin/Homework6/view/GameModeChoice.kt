@@ -18,22 +18,29 @@ import androidx.compose.ui.unit.sp
 
 @Suppress("FunctionNaming")
 @Composable
-fun GameModeChoice(onClick1: () -> Unit, onClick2: () -> Unit) = Box(
+fun GameModeChoice(onClick1: () -> Unit, onClick2: () -> Unit, onClick3: () -> Unit) = Box(
     modifier = Modifier.fillMaxWidth().fillMaxHeight(), contentAlignment = Alignment.Center
 ) {
     Column(modifier = Modifier.width(600.dp).height(800.dp)) {
         Button(
             onClick = onClick1,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().height(100.dp)
         ) {
             Text("Одиночная игра", textAlign = TextAlign.Center, fontSize = 35.sp)
         }
 
         Button(
             onClick = onClick2,
-            modifier = Modifier.fillMaxWidth().padding(0.dp, 100.dp)
+            modifier = Modifier.fillMaxWidth().padding(0.dp, 50.dp).height(100.dp)
         ) {
-            Text("Игра с ботом", textAlign = TextAlign.Center, fontSize = 35.sp)
+            Text("Игра со случайным ботом", textAlign = TextAlign.Center, fontSize = 35.sp)
+        }
+
+        Button(
+            onClick = onClick3,
+            modifier = Modifier.fillMaxWidth().padding(0.dp, 50.dp).height(100.dp)
+        ) {
+            Text("Игра со стратегическим ботом", textAlign = TextAlign.Center, fontSize = 35.sp)
         }
     }
 }
