@@ -1,11 +1,8 @@
 package final
 
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-
 const val RANDOM_PAGE = "https://en.wikipedia.org/wiki/Special:Random"
 
-suspend fun main(args: Array<String>) {
+fun main(args: Array<String>) {
     val input = Input()
     input.main(args)
     input.validate()
