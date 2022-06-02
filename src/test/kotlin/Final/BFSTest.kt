@@ -9,7 +9,7 @@ internal class BFSTest {
     @ParameterizedTest
     @MethodSource("addTestInputData")
     fun `bfs test`(expected: Int, startArticle: String, searchDepth: Int, threadsCount: Int) {
-        assertEquals(expected, bfs(startArticle, searchDepth, threadsCount))
+        assertEquals(expected, bfs(startArticle, searchDepth, threadsCount).first)
     }
 
     companion object {
