@@ -38,6 +38,7 @@ fun bfs(startArticle: String, searchDepth: Int, threadsCount: Int): Pair<Int, Li
     prev[startArticle] = ""
 
     while (articles.isNotEmpty() && articles.peek().second < searchDepth) {
+        print("#") // для прогресс-бара
         val firstRefs = (1..threadsCount).mapNotNull { articles.poll() }
         var isContinue = false
         for (element in firstRefs) {

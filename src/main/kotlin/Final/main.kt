@@ -1,8 +1,11 @@
 package final
 
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+
 const val RANDOM_PAGE = "https://en.wikipedia.org/wiki/Special:Random"
 
-fun main(args: Array<String>) {
+suspend fun main(args: Array<String>) {
     val input = Input()
     input.main(args)
     input.validate()
@@ -12,7 +15,11 @@ fun main(args: Array<String>) {
         startArticle = "https://$startArticle"
     }
 
+    println("Выполняем подсчёт...")
+
     val (pathLength, path) = bfs(startArticle, input.searchDepth, input.threadsCount)
+
+    println()
     if (pathLength == NOT_FOUND) {
         println("С этой страницы нельзя прийти к Гитлеру за ${input.searchDepth} шагов!")
     } else {
