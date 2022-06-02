@@ -42,6 +42,7 @@ fun commandExecute(): List<Int> {
                 }
             }
             Command.END -> break
+            else -> { }
         }
     }
     return storage.publicNumbers
